@@ -30,3 +30,11 @@ This tool can be easily built using the provided Makefile. Simply issue one of t
 - `make darwin` - Builds 64-bit Mac client in the bin/ directory
 - `make linux` - Builds 64-bit Linux client in the bin/ directory
 - `make all` - Builds both of the above in the bin/ directory
+
+## Next Steps
+
+- Parallelize the download/push flow
+- Combination command for download/push
+- Improve interaction with registries, search for tags and that kind of thing
+- Provide a "daemon mode" that monitors the desired containers and if new versions pop up, pull/push
+- Support <,>,= notations for container version tags?
