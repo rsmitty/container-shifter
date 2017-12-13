@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/user"
 	"strings"
+	"sync"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/docker/docker/api/types"
@@ -59,17 +60,26 @@ func pushImages(dockerConfig string, csConfig string) {
 		//Check if credentials already exist in docker configs for this registry
 		authString := utils.RegistryAuth(registryName, dockerConfig)
 
-		for _, image := range configContents.Containers {
-			//Retag image with current registry name
-			imageName, err := tagImages(cli, image, registryName)
-			utils.ErrorCheck(err)
+		//Create wait group for the push goroutines
+		var wg sync.WaitGroup
+		wg.Add(len(configContents.Containers))
 
-			//Push image
-			out, err := cli.ImagePush(context.Background(), imageName, types.ImagePushOptions{RegistryAuth: authString})
-			utils.ErrorCheck(err)
-			defer out.Close()
-			io.Copy(os.Stdout, out)
+		for _, image := range configContents.Containers {
+			go func(img string) {
+				defer wg.Done()
+
+				//Retag image with current registry name
+				imageName, err := tagImages(cli, img, registryName)
+				utils.ErrorCheck(err)
+
+				//Push image
+				out, err := cli.ImagePush(context.Background(), imageName, types.ImagePushOptions{RegistryAuth: authString})
+				utils.ErrorCheck(err)
+				defer out.Close()
+				io.Copy(os.Stdout, out)
+			}(image)
 		}
+		wg.Wait()
 
 	}
 

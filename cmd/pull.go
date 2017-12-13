@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"sync"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/docker/docker/api/types"
@@ -40,14 +41,21 @@ func pullImages(csConfig string) {
 	var configContents containerConfig
 	err = yaml.Unmarshal(config, &configContents)
 
+	var wg sync.WaitGroup
+	wg.Add(len(configContents.Containers))
+
 	//Pull down images
 	for _, image := range configContents.Containers {
-		fmt.Println(image)
-		out, err := cli.ImagePull(context.Background(), image, types.ImagePullOptions{})
-		utils.ErrorCheck(err)
+		go func(img string) {
+			defer wg.Done()
 
-		defer out.Close()
-		io.Copy(os.Stdout, out)
+			log.Info("Pulling " + img)
+			out, err := cli.ImagePull(context.Background(), img, types.ImagePullOptions{})
+			utils.ErrorCheck(err)
+
+			defer out.Close()
+			io.Copy(os.Stdout, out)
+		}(image)
 	}
-
+	wg.Wait()
 }
