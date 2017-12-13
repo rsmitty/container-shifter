@@ -18,9 +18,9 @@ It's important to note that you'll currently need to specify full paths and vers
 
 - `docker login` to any registries as necessary. You need the auth info added to your config.json for docker.
 
-- Run the container-shifter binary to pull down the desired images with `./container-shifter pull --config-file /path/to/config.yml`
+- Run the container-shifter binary to pull down the desired images with `./container-shifter pull --config-file /path/to/config.yml`. Pulls will happen in parallel.
 
-- Push images to the private registries with `./container-shifter pull --config-file /path/to/config.yml --docker-config /path/to/docker/config.json`
+- Push images to the private registries with `./container-shifter pull --config-file /path/to/config.yml --docker-config /path/to/docker/config.json`. Pushes will happen in parallel for each registry, i.e. all images are pushed at once to the first registry, then the second, and so on.
 
 Both of the config flags are optional. Docker one defaults to `$HOME/.docker/config.json`. The push/pull steps will eventually be combined into an all-in-one command.
 
@@ -33,7 +33,6 @@ This tool can be easily built using the provided Makefile. Simply issue one of t
 
 ## Next Steps
 
-- Parallelize the download/push flow
 - Combination command for download/push
 - Improve interaction with registries, search for tags and that kind of thing
 - Provide a "daemon mode" that monitors the desired containers and if new versions pop up, pull/push
