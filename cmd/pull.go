@@ -22,9 +22,8 @@ var pull = &cobra.Command{
 	Long:  "Allows for pulling docker images",
 	Run: func(cmd *cobra.Command, args []string) {
 		csConfig, err := cmd.Flags().GetString("config-file")
-		if err != nil {
-			log.Fatal(err)
-		}
+		utils.ErrorCheck(err)
+
 		pullImages(csConfig)
 	},
 }

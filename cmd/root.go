@@ -49,4 +49,6 @@ func init() {
 	RootCmd.PersistentFlags().String("config-file", configDefault, "Path to container-shifter config file")
 	RootCmd.AddCommand(pull)
 	RootCmd.AddCommand(push)
+	RootCmd.AddCommand(save)
+	RootCmd.AddCommand(imageLoad)
 }

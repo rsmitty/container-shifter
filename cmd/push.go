@@ -10,7 +10,6 @@ import (
 	"strings"
 	"sync"
 
-	log "github.com/Sirupsen/logrus"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/ghodss/yaml"
@@ -24,13 +23,11 @@ var push = &cobra.Command{
 	Long:  "Allows for pushing docker images",
 	Run: func(cmd *cobra.Command, args []string) {
 		dockerConfig, err := cmd.Flags().GetString("docker-config")
-		if err != nil {
-			log.Fatal(err)
-		}
+		utils.ErrorCheck(err)
+
 		csConfig, err := cmd.Flags().GetString("config-file")
-		if err != nil {
-			log.Fatal(err)
-		}
+		utils.ErrorCheck(err)
+
 		pushImages(dockerConfig, csConfig)
 	},
 }
@@ -80,7 +77,6 @@ func pushImages(dockerConfig string, csConfig string) {
 			}(image)
 		}
 		wg.Wait()
-
 	}
 
 }
