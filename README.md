@@ -24,6 +24,13 @@ It's important to note that you'll currently need to specify full paths and vers
 
 Both of the config flags are optional. Docker one defaults to `$HOME/.docker/config.json`. The push/pull steps will eventually be combined into an all-in-one command.
 
+### Registries
+The container-shifter binary also includes the ability to deploy a basic docker registry. The idea behind this is to allow for the spin-up of a registry when you get in an environment (like a new data center) and your enterprise registries haven't been created yet. I hope to allow for the creation of the registry and some /etc/hosts hacks to allow us to pretend to be the enterprise registry temporarily so container images are available quickly.
+
+To use:
+- Create the registry with `./container-shifter registry --registry-dir /path/to/registry/dir`.
+- Registry serves on port 5000 and registry-dir is optional with a default of /opt/docker-registry.
+
 ### Dealing With Airgapped Environments
 
 One of the reasons I wrote this tool is to try and help ease the burden of dealing with an airgapped environment. A system without access to the public internet needs to have a fully private registry. Here's how you might use the built-in commands to accomplish this

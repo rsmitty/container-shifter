@@ -51,4 +51,5 @@ func init() {
 	RootCmd.AddCommand(push)
 	RootCmd.AddCommand(save)
 	RootCmd.AddCommand(imageLoad)
+	RootCmd.AddCommand(registry)
 }
